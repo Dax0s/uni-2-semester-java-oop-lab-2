@@ -1,4 +1,4 @@
-package org.example.lab.new_view;
+package org.example.lab.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

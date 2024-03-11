@@ -6,8 +6,8 @@ module org.example.lab {
 
     opens org.example.lab to javafx.fxml;
     exports org.example.lab;
-    exports org.example.lab.hello_view;
-    opens org.example.lab.hello_view to javafx.fxml;
-    exports org.example.lab.new_view;
-    opens org.example.lab.new_view to javafx.fxml;
+    exports org.example.lab.controllers;
+    opens org.example.lab.controllers to javafx.fxml;
+    exports org.example.lab.loans;
+    opens org.example.lab.loans to javafx.fxml;
 }

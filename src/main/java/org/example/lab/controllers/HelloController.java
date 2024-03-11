@@ -1,17 +1,15 @@
-package org.example.lab.hello_view;
+package org.example.lab.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.VBox;
+import org.example.lab.loans.AnnuityLoan;
+import org.example.lab.loans.LinearLoan;
+import org.example.lab.loans.Loan;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.Objects;
 import java.util.Optional;
 
 public class HelloController {
@@ -86,12 +84,21 @@ public class HelloController {
             monthError.setText("Šis laukas priima tik skaičius!");
         }
 
+        if (sum.isPresent() && years.isPresent() && months.isPresent()) {
+            Loan loan;
 
-        System.out.println("---------");
-        System.out.println(sum.isPresent() ? sum.get() : "No sum");
-        System.out.println(years.isPresent() ? years.get() : "No years");
-        System.out.println(months.isPresent() ? months.get() : "No months");
-        System.out.println("---------");
+            switch (choices.getValue()) {
+                case "Anuiteto":
+                    loan = new AnnuityLoan(sum.get(), years.get(), months.get());
+                case "Linijinis":
+                    loan = new LinearLoan(sum.get(), years.get(), months.get());
+                default:
+                    loan = new AnnuityLoan(sum.get(), years.get(), months.get());
+            }
+
+//            Loan loan = new Loan(sum.get(), years.get(), months.get());
+        }
+
     }
 
 //    @FXML
