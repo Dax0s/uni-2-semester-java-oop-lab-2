@@ -14,7 +14,7 @@ import java.util.Optional;
 
 public class HelloController {
 
-    private ObservableList<String> choicesList = FXCollections.observableArrayList("Anuiteto", "Linijinis", "Metinis procentas");
+    private final ObservableList<String> choicesList = FXCollections.observableArrayList("Anuiteto", "Linijinis");
 
     @FXML
     private TextField sum;
@@ -22,6 +22,8 @@ public class HelloController {
     private TextField years;
     @FXML
     private TextField months;
+    @FXML
+    private TextField yearlyPercentage;
 
     @FXML
     private Label sumError;
@@ -29,6 +31,8 @@ public class HelloController {
     private Label yearError;
     @FXML
     private Label monthError;
+    @FXML
+    private Label yearlyPercentageError;
 
     @FXML
     private ChoiceBox<String> choices;
@@ -84,21 +88,31 @@ public class HelloController {
             monthError.setText("Šis laukas priima tik skaičius!");
         }
 
-        if (sum.isPresent() && years.isPresent() && months.isPresent()) {
+        Optional<Float> yearlyPercentage = Optional.empty();
+        try {
+            if (this.yearlyPercentage.getText().isBlank())
+                throw new NullPointerException();
+
+            yearlyPercentage = Optional.of(Float.parseFloat(this.yearlyPercentage.getText()));
+            yearlyPercentageError.setText("");
+        } catch (NullPointerException e) {
+            yearlyPercentageError.setText("Šis laukas negali būti tuščias!");
+        } catch (NumberFormatException e) {
+            yearlyPercentageError.setText("Šis laukas priima tik skaičius!");
+        }
+
+        if (sum.isPresent() && years.isPresent() && months.isPresent() && yearlyPercentage.isPresent()) {
             Loan loan;
 
             switch (choices.getValue()) {
                 case "Anuiteto":
-                    loan = new AnnuityLoan(sum.get(), years.get(), months.get());
+                    loan = new AnnuityLoan(sum.get(), years.get(), months.get(), yearlyPercentage.get());
                 case "Linijinis":
-                    loan = new LinearLoan(sum.get(), years.get(), months.get());
+                    loan = new LinearLoan(sum.get(), years.get(), months.get(), yearlyPercentage.get());
                 default:
-                    loan = new AnnuityLoan(sum.get(), years.get(), months.get());
+                    loan = new AnnuityLoan(sum.get(), years.get(), months.get(), yearlyPercentage.get());
             }
-
-//            Loan loan = new Loan(sum.get(), years.get(), months.get());
         }
-
     }
 
 //    @FXML
