@@ -9,7 +9,9 @@ import javafx.scene.control.TextField;
 import org.example.lab.loans.AnnuityLoan;
 import org.example.lab.loans.LinearLoan;
 import org.example.lab.loans.Loan;
+import org.example.lab.loans.LoanPayment;
 
+import java.util.List;
 import java.util.Optional;
 
 public class HelloController {
@@ -45,12 +47,12 @@ public class HelloController {
 
     @FXML
     protected void onCalculateButtonPress() {
-        Optional<Float> sum = Optional.empty();
+        Optional<Double> sum = Optional.empty();
         try {
             if (this.sum.getText().isBlank())
                 throw new NullPointerException();
 
-            sum = Optional.of(Float.parseFloat(this.sum.getText()));
+            sum = Optional.of(Double.parseDouble(this.sum.getText()));
             sumError.setText("");
         } catch (NullPointerException e) {
             sumError.setText("Šis laukas negali būti tuščias!");
@@ -88,12 +90,12 @@ public class HelloController {
             monthError.setText("Šis laukas priima tik skaičius!");
         }
 
-        Optional<Float> yearlyPercentage = Optional.empty();
+        Optional<Double> yearlyPercentage = Optional.empty();
         try {
             if (this.yearlyPercentage.getText().isBlank())
                 throw new NullPointerException();
 
-            yearlyPercentage = Optional.of(Float.parseFloat(this.yearlyPercentage.getText()));
+            yearlyPercentage = Optional.of(Double.parseDouble(this.yearlyPercentage.getText()));
             yearlyPercentageError.setText("");
         } catch (NullPointerException e) {
             yearlyPercentageError.setText("Šis laukas negali būti tuščias!");
@@ -112,12 +114,14 @@ public class HelloController {
                 default:
                     loan = new AnnuityLoan(sum.get(), years.get(), months.get(), yearlyPercentage.get());
             }
+
+            List<LoanPayment> payments = loan.GetMonthlyPayments();
         }
     }
 
 //    @FXML
 //    protected void loadAnotherView() throws IOException {
-//        URL url = getClass().getResource("/org/example/lab/another-view.fxml");
+//        URL url = getClass().getResource("/org/example/lab/table-view.fxml");
 //        if (url == null) {
 //            throw new IOException("FXML file not found!");
 //        }

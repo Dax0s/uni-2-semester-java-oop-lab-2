@@ -1,17 +1,19 @@
 package org.example.lab.loans;
 
-public class Loan {
-    private float sum;
-    private int years;
-    private int months;
-    private float yearlyPercentage;
+import java.util.List;
 
-    public Loan(float sum, int years, int months, float yearlyPercentage) {
+public abstract class Loan {
+    protected double sum;
+    protected int years;
+    protected int months;
+    protected double yearlyPercentage;
+
+    public Loan(double sum, int years, int months, double yearlyPercentage) {
         this.sum = sum;
         this.years = years;
         this.months = months;
         this.yearlyPercentage = yearlyPercentage;
     }
 
-
+    public abstract List<LoanPayment> GetMonthlyPayments();
 }
