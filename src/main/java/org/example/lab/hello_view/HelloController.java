@@ -1,7 +1,10 @@
 package org.example.lab.hello_view;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
@@ -12,6 +15,8 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class HelloController {
+
+    private ObservableList<String> choicesList = FXCollections.observableArrayList("Anuiteto", "Linijinis", "Metinis procentas");
 
     @FXML
     private TextField sum;
@@ -26,6 +31,15 @@ public class HelloController {
     private Label yearError;
     @FXML
     private Label monthError;
+
+    @FXML
+    private ChoiceBox<String> choices;
+
+    @FXML
+    private void initialize() {
+        choices.setItems(choicesList);
+        choices.setValue(choicesList.get(0));
+    }
 
     @FXML
     protected void onCalculateButtonPress() {
