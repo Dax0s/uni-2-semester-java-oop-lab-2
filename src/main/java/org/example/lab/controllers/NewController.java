@@ -1,5 +1,6 @@
 package org.example.lab.controllers;
 
+import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -8,9 +9,17 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.Duration;
+import org.example.lab.loans.Loan;
 import org.example.lab.loans.LoanPayment;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 public class NewController {
     @FXML
@@ -18,6 +27,11 @@ public class NewController {
 
     @FXML
     private LineChart<String, Number> lineChart;
+
+    private Optional<List<LoanPayment>> payments = Optional.empty();
+
+    @FXML
+    private Label saveLabel;
 
     private void initializeChart(List<LoanPayment> payments) {
         lineChart.setTitle("Loan payments left");
@@ -35,6 +49,8 @@ public class NewController {
     }
 
     public void initializeTable(List<LoanPayment> payments) {
+        this.payments = Optional.of(payments);
+
         TableColumn<LoanPayment, Integer> column1 = new TableColumn<>("Year");
         column1.setCellValueFactory(new PropertyValueFactory<>("year"));
 
@@ -61,6 +77,28 @@ public class NewController {
     }
 
     @FXML
-    protected void onButtonClick() {
+    protected void saveToFile() throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter("loan.csv"));
+
+        if (payments.isEmpty()) {
+            writer.write("No data to save");
+            writer.close();
+
+            return;
+        }
+
+        writer.write("Year,Month,Sum to pay,Left to pay\n");
+
+        for (LoanPayment payment : payments.get()) {
+            writer.write(payment.year() + "," + payment.month() + "," + payment.getSumToPay() + "," + payment.getLeftToPay() + "\n");
+        }
+
+        writer.close();
+
+        saveLabel.setText("Išsaugota!");
+
+        PauseTransition pauseTransition = new PauseTransition(Duration.seconds(2));
+        pauseTransition.setOnFinished(actionEvent -> saveLabel.setText(""));
+        pauseTransition.play();
     }
 }

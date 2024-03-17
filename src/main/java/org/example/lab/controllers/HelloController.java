@@ -10,7 +10,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.example.lab.loans.AnnuityLoan;
@@ -19,7 +18,6 @@ import org.example.lab.loans.Loan;
 import org.example.lab.loans.LoanPayment;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 

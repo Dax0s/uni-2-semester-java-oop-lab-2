@@ -15,9 +15,6 @@ public class AnnuityLoan extends Loan {
         double down = Math.pow(1 + monthlyInterestRate, years * 12 + months) - 1;
         double monthlyPayment = (float) (sum * (up / down));
 
-        System.out.println(monthlyPayment);
-        System.out.println(monthlyPayment * months + monthlyPayment * years * 12);
-
         List<LoanPayment> payments = new ArrayList<>();
 
         double leftToPay = monthlyPayment * years * 12 + monthlyPayment * months;
