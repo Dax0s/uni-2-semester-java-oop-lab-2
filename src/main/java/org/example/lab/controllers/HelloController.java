@@ -2,21 +2,33 @@ package org.example.lab.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 import org.example.lab.loans.AnnuityLoan;
 import org.example.lab.loans.LinearLoan;
 import org.example.lab.loans.Loan;
 import org.example.lab.loans.LoanPayment;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 
 public class HelloController {
 
     private final ObservableList<String> choicesList = FXCollections.observableArrayList("Anuiteto", "Linijinis");
+
+    @FXML
+    private BorderPane rootBorderPane;
 
     @FXML
     private TextField sum;
@@ -39,6 +51,9 @@ public class HelloController {
     @FXML
     private ChoiceBox<String> choices;
 
+    private Stage stage;
+    private Scene scene;
+
     @FXML
     private void initialize() {
         choices.setItems(choicesList);
@@ -46,7 +61,7 @@ public class HelloController {
     }
 
     @FXML
-    protected void onCalculateButtonPress() {
+    protected void onCalculateButtonPress(ActionEvent event) throws IOException {
         Optional<Double> sum = Optional.empty();
         try {
             if (this.sum.getText().isBlank())
@@ -116,17 +131,38 @@ public class HelloController {
             }
 
             List<LoanPayment> payments = loan.GetMonthlyPayments();
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/lab/table-view.fxml"));
+            BorderPane borderPane = loader.load();
+
+
+            NewController controller = loader.getController();
+            controller.initializeTable(payments);
+
+            stage = (Stage) (((Node) event.getSource()).getScene().getWindow());
+            scene = new Scene(borderPane);
+            stage.setScene(scene);
+            stage.show();
         }
     }
 
 //    @FXML
-//    protected void loadAnotherView() throws IOException {
+//    protected void loadAnotherView(ActionEvent event) throws IOException {
 //        URL url = getClass().getResource("/org/example/lab/table-view.fxml");
 //        if (url == null) {
 //            throw new IOException("FXML file not found!");
 //        }
 //
-//        VBox vBox = FXMLLoader.load(url);
-//        rootVBox.getChildren().setAll(vBox);
+//        FXMLLoader loader = new FXMLLoader(url);
+//        BorderPane borderPane = loader.load();
+//
+//
+//        NewController controller = loader.getController();
+////        controller.initializeTable();
+//
+//        Stage stage = (Stage) (((Node) event.getSource()).getScene().getWindow());
+//        Scene scene = new Scene(borderPane);
+//        stage.setScene(scene);
+//        stage.show();
 //    }
 }
