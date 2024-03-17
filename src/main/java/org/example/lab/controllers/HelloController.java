@@ -145,24 +145,4 @@ public class HelloController {
             stage.show();
         }
     }
-
-//    @FXML
-//    protected void loadAnotherView(ActionEvent event) throws IOException {
-//        URL url = getClass().getResource("/org/example/lab/table-view.fxml");
-//        if (url == null) {
-//            throw new IOException("FXML file not found!");
-//        }
-//
-//        FXMLLoader loader = new FXMLLoader(url);
-//        BorderPane borderPane = loader.load();
-//
-//
-//        NewController controller = loader.getController();
-////        controller.initializeTable();
-//
-//        Stage stage = (Stage) (((Node) event.getSource()).getScene().getWindow());
-//        Scene scene = new Scene(borderPane);
-//        stage.setScene(scene);
-//        stage.show();
-//    }
 }
