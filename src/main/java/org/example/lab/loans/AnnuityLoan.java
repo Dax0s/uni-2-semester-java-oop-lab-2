@@ -17,18 +17,21 @@ public class AnnuityLoan extends Loan {
 
         List<LoanPayment> payments = new ArrayList<>();
 
-        double leftToPay = monthlyPayment * years * 12 + monthlyPayment * months;
+        double loanBalance = sum;
         int year = 1;
         int month = 1;
         for (int i = 0; i < years * 12 + months; i++) {
-            payments.add(new LoanPayment(year, month++, monthlyPayment, leftToPay));
+            double monthlyInterest = loanBalance * monthlyInterestRate;
+            double monthlyCredit = monthlyPayment - monthlyInterest;
+
+            payments.add(new LoanPayment(year, month++, monthlyPayment, monthlyInterest, monthlyCredit, loanBalance));
 
             if (month > 12) {
                 year++;
                 month = 1;
             }
 
-            leftToPay -= monthlyPayment;
+            loanBalance -= monthlyCredit;
         }
 
         return payments;

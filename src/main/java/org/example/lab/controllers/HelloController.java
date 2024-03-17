@@ -122,8 +122,10 @@ public class HelloController {
             switch (choices.getValue()) {
                 case "Anuiteto":
                     loan = new AnnuityLoan(sum.get(), years.get(), months.get(), yearlyPercentage.get());
+                    break;
                 case "Linijinis":
                     loan = new LinearLoan(sum.get(), years.get(), months.get(), yearlyPercentage.get());
+                    break;
                 default:
                     loan = new AnnuityLoan(sum.get(), years.get(), months.get(), yearlyPercentage.get());
             }
