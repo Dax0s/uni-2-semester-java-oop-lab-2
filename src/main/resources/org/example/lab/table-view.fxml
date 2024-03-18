@@ -38,6 +38,7 @@
             <TextField fx:id="toMonth" layoutX="100.0" layoutY="375.0" prefWidth="61.0" promptText="Mėnuo" />
             <Label layoutX="18.0" layoutY="300.0" text="Nuo:" />
             <Label layoutX="18.0" layoutY="357.0" text="Iki:" />
+            <Label fx:id="filteringErrorLabel" layoutX="17.0" layoutY="452.0" textFill="RED" />
          </children>
       </AnchorPane>
    </center>

@@ -10,7 +10,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Duration;
-import org.example.lab.loans.Loan;
 import org.example.lab.loans.LoanPayment;
 
 import java.io.BufferedWriter;
@@ -41,6 +40,10 @@ public class NewController {
     private TextField toYear;
     @FXML
     private TextField toMonth;
+
+    @FXML
+    private Label filteringErrorLabel;
+    PauseTransition filteringErrorLabelPauseTransition = new PauseTransition(Duration.seconds(2));
 
     private void initializeChart(List<LoanPayment> payments) {
         lineChart.setTitle("Paskolos įmokos");
@@ -123,55 +126,95 @@ public class NewController {
 
     @FXML
     protected void filter() {
-        Optional<Integer> fromYear = Optional.empty();
+        filteringErrorLabelPauseTransition.setOnFinished(actionEvent -> filteringErrorLabel.setText(""));
+        filteringErrorLabelPauseTransition.playFromStart();
+
+        int fromYear;
         try {
-            fromYear = Optional.of(Integer.parseInt(this.fromYear.getText()));
-        } catch (NumberFormatException ignored) {
+            if (this.fromYear.getText().isBlank())
+                throw new NullPointerException();
+
+            fromYear = Integer.parseInt(this.fromYear.getText());
+        } catch (NullPointerException e) {
+            filteringErrorLabel.setText("Turi būti pasirinkti pradžios metai");
+            return;
+        } catch (NumberFormatException e) {
+            filteringErrorLabel.setText("Pradžios metų lauke galimi tik skaičiai");
+            return;
         }
 
-        Optional<Integer> fromMonth = Optional.empty();
+        int fromMonth;
         try {
-            fromMonth = Optional.of(Integer.parseInt(this.fromMonth.getText()));
-        } catch (NumberFormatException ignored) {
+            if (this.fromMonth.getText().isBlank())
+                throw new NullPointerException();
+
+            fromMonth = Integer.parseInt(this.fromMonth.getText());
+        } catch (NullPointerException e) {
+            filteringErrorLabel.setText("Turi būti pasirinktas pradžios mėnesis");
+            return;
+        } catch (NumberFormatException e) {
+            filteringErrorLabel.setText("Pradžios mėnesio lauke galimi tik skaičiai");
+            return;
         }
 
-        Optional<Integer> toYear = Optional.empty();
+        int toYear;
         try {
-            toYear = Optional.of(Integer.parseInt(this.toYear.getText()));
-        } catch (NumberFormatException ignored) {
+            if (this.toYear.getText().isBlank())
+                throw new NullPointerException();
+
+            toYear = Integer.parseInt(this.toYear.getText());
+        } catch (NullPointerException e) {
+            filteringErrorLabel.setText("Turi būti pasirinkti pabaigos metai");
+            return;
+        } catch (NumberFormatException e) {
+            filteringErrorLabel.setText("Pabaigos metų lauke galimi tik skaičiai");
+            return;
         }
 
-        Optional<Integer> toMonth = Optional.empty();
+        int toMonth;
         try {
-            toMonth = Optional.of(Integer.parseInt(this.toMonth.getText()));
-        } catch (NumberFormatException ignored) {
+            if (this.toMonth.getText().isBlank())
+                throw new NullPointerException();
+
+            toMonth = Integer.parseInt(this.toMonth.getText());
+        } catch (NullPointerException e) {
+            filteringErrorLabel.setText("Turi būti pasirinktas pabaigos mėnesis");
+            return;
+        } catch (NumberFormatException e) {
+            filteringErrorLabel.setText("Pabaigos mėnesio lauke galimi tik skaičiai");
+            return;
         }
 
-        if (fromYear.isPresent() && fromMonth.isPresent() && toYear.isPresent() && toMonth.isPresent() && payments.isPresent()) {
-            if (fromYear.get() < 1) {
+        if (payments.isPresent()) {
+            if (fromYear < 1) {
+                filteringErrorLabel.setText("Pradžios metai negali būti mažiau už 0");
                 return;
             }
 
-            if (fromMonth.get() < 1 || fromMonth.get() > 12) {
+            if (fromMonth < 1 || fromMonth > 12) {
+                filteringErrorLabel.setText("Pradžios mėnesis turi būti tarp 1 ir 12");
                 return;
             }
 
-            if (toMonth.get() < 1 || toMonth.get() > 12) {
+            if (toMonth < 1 || toMonth > 12) {
+                filteringErrorLabel.setText("Pabaigos mėnesis turi būti tarp 1 ir 12");
                 return;
             }
 
-            if ((fromYear.get() - 1) * 12 + fromMonth.get() - 1 > (toYear.get() - 1) * 12 + toMonth.get() - 1) {
+            if ((fromYear - 1) * 12 + fromMonth - 1 > (toYear - 1) * 12 + toMonth - 1) {
+                filteringErrorLabel.setText("Pradžios data negali būti didesnė už pabaigos datą");
                 return;
             }
 
-            if ((toYear.get() - 1) * 12 + toMonth.get() > payments.get().size()) {
+            if ((toYear - 1) * 12 + toMonth > payments.get().size()) {
+                filteringErrorLabel.setText("Pabaigos data negali būti didesnė už paskolos laikotarpį");
                 return;
             }
 
             filteredPayments.ifPresent(List::clear);
             if (filteredPayments.isEmpty()) filteredPayments = Optional.of(new ArrayList<>());
 
-            for (int i = (fromYear.get() - 1) * 12 + fromMonth.get() - 1; i < (toYear.get() - 1) * 12 + toMonth.get(); i++)
+            for (int i = (fromYear - 1) * 12 + fromMonth - 1; i < (toYear - 1) * 12 + toMonth; i++)
             {
                 filteredPayments.get().add(payments.get().get(i));
             }
