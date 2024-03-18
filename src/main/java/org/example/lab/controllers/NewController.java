@@ -7,13 +7,16 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Duration;
+import org.example.lab.loans.Loan;
 import org.example.lab.loans.LoanPayment;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,9 +28,19 @@ public class NewController {
     private LineChart<String, Number> lineChart;
 
     private Optional<List<LoanPayment>> payments = Optional.empty();
+    private Optional<List<LoanPayment>> filteredPayments = Optional.empty();
 
     @FXML
     private Label saveLabel;
+
+    @FXML
+    private TextField fromYear;
+    @FXML
+    private TextField fromMonth;
+    @FXML
+    private TextField toYear;
+    @FXML
+    private TextField toMonth;
 
     private void initializeChart(List<LoanPayment> payments) {
         lineChart.setTitle("Paskolos įmokos");
@@ -41,11 +54,12 @@ public class NewController {
             series.getData().add(new XYChart.Data<>(String.valueOf((payment.year() - 1) * 12 + payment.month()), payment.getMonthlyPayment()));
         }
 
+        lineChart.getData().clear();
         lineChart.getData().add(series);
     }
 
-    public void initializeTable(List<LoanPayment> payments) {
-        this.payments = Optional.of(payments);
+    public void initializeTable(List<LoanPayment> payments, boolean updatePayments) {
+        if (updatePayments) this.payments = Optional.of(payments);
 
         TableColumn<LoanPayment, Integer> column1 = new TableColumn<>("Metai");
         column1.setCellValueFactory(new PropertyValueFactory<>("year"));
@@ -73,6 +87,7 @@ public class NewController {
         tableView.getColumns().add(column5);
         tableView.getColumns().add(column6);
 
+        tableView.getItems().clear();
         for (LoanPayment payment : payments) {
             tableView.getItems().add(payment);
         }
@@ -104,5 +119,43 @@ public class NewController {
         PauseTransition pauseTransition = new PauseTransition(Duration.seconds(2));
         pauseTransition.setOnFinished(actionEvent -> saveLabel.setText(""));
         pauseTransition.play();
+    }
+
+    @FXML
+    protected void filter() {
+        Optional<Integer> fromYear = Optional.empty();
+        try {
+            fromYear = Optional.of(Integer.parseInt(this.fromYear.getText()));
+        } catch (NumberFormatException ignored) {
+        }
+
+        Optional<Integer> fromMonth = Optional.empty();
+        try {
+            fromMonth = Optional.of(Integer.parseInt(this.fromMonth.getText()));
+        } catch (NumberFormatException ignored) {
+        }
+
+        Optional<Integer> toYear = Optional.empty();
+        try {
+            toYear = Optional.of(Integer.parseInt(this.toYear.getText()));
+        } catch (NumberFormatException ignored) {
+        }
+
+        Optional<Integer> toMonth = Optional.empty();
+        try {
+            toMonth = Optional.of(Integer.parseInt(this.toMonth.getText()));
+        } catch (NumberFormatException ignored) {
+        }
+
+        if (fromYear.isPresent() && fromMonth.isPresent() && toYear.isPresent() && toMonth.isPresent() && payments.isPresent()) {
+            filteredPayments.ifPresent(List::clear);
+            if (filteredPayments.isEmpty()) filteredPayments = Optional.of(new ArrayList<>());
+
+            for (int i = (fromYear.get() - 1) * 12 + fromMonth.get() - 1; i < (toYear.get() - 1) * 12 + toMonth.get(); i++)
+            {
+                filteredPayments.get().add(payments.get().get(i));
+            }
+            initializeTable(filteredPayments.get(), false);
+        }
     }
 }

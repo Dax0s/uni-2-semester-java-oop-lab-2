@@ -137,7 +137,7 @@ public class HelloController {
 
 
             NewController controller = loader.getController();
-            controller.initializeTable(payments);
+            controller.initializeTable(payments, true);
 
             stage = (Stage) (((Node) event.getSource()).getScene().getWindow());
             scene = new Scene(borderPane);
