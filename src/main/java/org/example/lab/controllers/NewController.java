@@ -148,6 +148,26 @@ public class NewController {
         }
 
         if (fromYear.isPresent() && fromMonth.isPresent() && toYear.isPresent() && toMonth.isPresent() && payments.isPresent()) {
+            if (fromYear.get() < 1) {
+                return;
+            }
+
+            if (fromMonth.get() < 1 || fromMonth.get() > 12) {
+                return;
+            }
+
+            if (toMonth.get() < 1 || toMonth.get() > 12) {
+                return;
+            }
+
+            if ((fromYear.get() - 1) * 12 + fromMonth.get() - 1 > (toYear.get() - 1) * 12 + toMonth.get() - 1) {
+                return;
+            }
+
+            if ((toYear.get() - 1) * 12 + toMonth.get() > payments.get().size()) {
+                return;
+            }
+
             filteredPayments.ifPresent(List::clear);
             if (filteredPayments.isEmpty()) filteredPayments = Optional.of(new ArrayList<>());
 
