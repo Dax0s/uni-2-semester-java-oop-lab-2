@@ -1,5 +1,6 @@
 plugins {
   id 'java'
+  id 'com.github.johnrengelman.shadow' version '8.1.1'
   id 'application'
   id 'org.javamodularity.moduleplugin' version '1.8.12'
   id 'org.openjfx.javafxplugin' version '0.0.13'
@@ -26,7 +27,7 @@ tasks.withType(JavaCompile) {
 
 application {
   mainModule = 'org.example.lab'
-  mainClass = 'org.example.lab.HelloApplication'
+  mainClass = 'org.example.lab.Main'
 }
 
 javafx {
@@ -56,4 +57,10 @@ jlink {
 
 jlinkZip {
   group = 'distribution'
+}
+
+tasks {
+  shadowJar {
+    exclude("module-info.class")
+  }
 }

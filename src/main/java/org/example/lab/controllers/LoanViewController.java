@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class NewController {
+public class LoanViewController {
     @FXML
     private TableView<LoanPayment> tableView = new TableView<>();
 

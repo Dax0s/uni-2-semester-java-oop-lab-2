@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-public class HelloController {
+public class FormController {
 
     private final ObservableList<String> choicesList = FXCollections.observableArrayList("Anuiteto", "Linijinis");
 
@@ -132,11 +132,11 @@ public class HelloController {
 
             List<LoanPayment> payments = loan.GetMonthlyPayments();
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/lab/table-view.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/lab/loan-view.fxml"));
             BorderPane borderPane = loader.load();
 
 
-            NewController controller = loader.getController();
+            LoanViewController controller = loader.getController();
             controller.initializeTable(payments, true);
 
             stage = (Stage) (((Node) event.getSource()).getScene().getWindow());
