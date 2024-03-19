@@ -29,7 +29,7 @@
                 <NumberAxis side="LEFT" />
               </yAxis>
             </LineChart>
-            <Button layoutX="45.0" layoutY="546.0" mnemonicParsing="false" onAction="#saveToFile" text="Išsaugoti į failą" />
+            <Button layoutX="14.0" layoutY="578.0" mnemonicParsing="false" onAction="#saveToFile" text="Išsaugoti į failą" />
             <Label fx:id="saveLabel" layoutX="45.0" layoutY="520.0" textFill="#269a09" />
             <TextField fx:id="fromYear" layoutX="14.0" layoutY="322.0" prefHeight="26.0" prefWidth="61.0" promptText="Metai" />
             <TextField fx:id="fromMonth" layoutX="100.0" layoutY="322.0" prefWidth="61.0" promptText="Mėnuo" />
