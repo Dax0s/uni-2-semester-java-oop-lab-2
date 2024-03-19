@@ -34,11 +34,12 @@
             <TextField fx:id="fromYear" layoutX="14.0" layoutY="322.0" prefHeight="26.0" prefWidth="61.0" promptText="Metai" />
             <TextField fx:id="fromMonth" layoutX="100.0" layoutY="322.0" prefWidth="61.0" promptText="Mėnuo" />
             <TextField fx:id="toYear" layoutX="14.0" layoutY="375.0" prefHeight="26.0" prefWidth="61.0" promptText="Metai" />
-            <Button layoutX="15.0" layoutY="414.0" mnemonicParsing="false" onAction="#filter" text="Filtruoti" />
             <TextField fx:id="toMonth" layoutX="100.0" layoutY="375.0" prefWidth="61.0" promptText="Mėnuo" />
+            <Button layoutX="15.0" layoutY="414.0" mnemonicParsing="false" onAction="#filter" text="Filtruoti" />
             <Label layoutX="18.0" layoutY="300.0" text="Nuo:" />
             <Label layoutX="18.0" layoutY="357.0" text="Iki:" />
             <Label fx:id="filteringErrorLabel" layoutX="17.0" layoutY="452.0" textFill="RED" />
+            <Button layoutX="131.0" layoutY="578.0" mnemonicParsing="false" onAction="#newLoan" text="Naujos paskolos skaičiavimas" />
          </children>
       </AnchorPane>
    </center>

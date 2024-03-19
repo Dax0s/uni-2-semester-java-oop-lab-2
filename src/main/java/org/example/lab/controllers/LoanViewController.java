@@ -1,7 +1,11 @@
 package org.example.lab.controllers;
 
 import javafx.animation.PauseTransition;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
@@ -9,6 +13,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.example.lab.loans.LoanPayment;
 
@@ -220,5 +226,18 @@ public class LoanViewController {
             }
             initializeTable(filteredPayments.get(), false);
         }
+    }
+
+    @FXML
+    protected void newLoan(ActionEvent event) throws IOException {
+        Stage stage = (Stage) (((Node) event.getSource()).getScene().getWindow());
+        stage.close();
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/lab/main-view.fxml"));
+        BorderPane borderPane = loader.load();
+
+        Scene scene = new Scene(borderPane);
+        stage.setScene(scene);
+        stage.show();
     }
 }

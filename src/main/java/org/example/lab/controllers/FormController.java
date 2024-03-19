@@ -22,11 +22,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class FormController {
-
     private final ObservableList<String> choicesList = FXCollections.observableArrayList("Anuiteto", "Linijinis");
-
-    @FXML
-    private BorderPane rootBorderPane;
 
     @FXML
     private TextField sum;
