@@ -49,9 +49,6 @@ public class FormController {
     @FXML
     private ChoiceBox<String> choices;
 
-    private Stage stage;
-    private Scene scene;
-
     @FXML
     private void initialize() {
         choices.setItems(choicesList);
@@ -62,11 +59,16 @@ public class FormController {
     protected void onCalculateButtonPress(ActionEvent event) throws IOException {
         Optional<Double> sum = Optional.empty();
         try {
+            sumError.setText("");
             if (this.sum.getText().isBlank())
                 throw new NullPointerException();
 
             sum = Optional.of(Double.parseDouble(this.sum.getText()));
-            sumError.setText("");
+
+            if (sum.get() < 0) {
+                sumError.setText("Paskolos suma negali būti mažesnė už 0");
+                sum = Optional.empty();
+            }
         } catch (NullPointerException e) {
             sumError.setText("Šis laukas negali būti tuščias!");
         } catch (NumberFormatException e) {
@@ -75,11 +77,17 @@ public class FormController {
 
         Optional<Integer> years = Optional.empty();
         try {
+            yearError.setText("");
+
             if (this.years.getText().isBlank())
                 throw new NullPointerException();
 
             years = Optional.of(Integer.valueOf(this.years.getText()));
-            yearError.setText("");
+
+            if (years.get() < 0) {
+                yearError.setText("Metai negali būti mažiau už 0");
+                years = Optional.empty();
+            }
         } catch (NullPointerException e) {
             yearError.setText("Šis laukas negali būti tuščias!");
         } catch (NumberFormatException e) {
@@ -88,15 +96,17 @@ public class FormController {
 
         Optional<Integer> months = Optional.empty();
         try {
+            monthError.setText("");
+
             if (this.months.getText().isBlank())
                 throw new NullPointerException();
 
             months = Optional.of(Integer.valueOf(this.months.getText()));
-            monthError.setText("");
 
-            if (months.get() < 0 || months.get() > 12)
+            if (months.get() < 0 || months.get() > 12) {
                 monthError.setText("Mėnesių laukas gali turėti vertes nuo 0 iki 12!");
-
+                months = Optional.empty();
+            }
         } catch (NullPointerException e) {
             monthError.setText("Šis laukas negali būti tuščias!");
         } catch (NumberFormatException e) {
@@ -105,11 +115,18 @@ public class FormController {
 
         Optional<Double> yearlyPercentage = Optional.empty();
         try {
+            yearlyPercentageError.setText("");
+
             if (this.yearlyPercentage.getText().isBlank())
                 throw new NullPointerException();
 
             yearlyPercentage = Optional.of(Double.parseDouble(this.yearlyPercentage.getText()));
-            yearlyPercentageError.setText("");
+
+            if (yearlyPercentage.get() < 0 || yearlyPercentage.get() > 100) {
+                yearlyPercentageError.setText("Metinis procentas gali būti nuo 0 iki 100");
+                yearlyPercentage = Optional.empty();
+            }
+
         } catch (NullPointerException e) {
             yearlyPercentageError.setText("Šis laukas negali būti tuščias!");
         } catch (NumberFormatException e) {
@@ -132,7 +149,7 @@ public class FormController {
 
             List<LoanPayment> payments = loan.GetMonthlyPayments();
 
-            stage = (Stage) (((Node) event.getSource()).getScene().getWindow());
+            Stage stage = (Stage) (((Node) event.getSource()).getScene().getWindow());
             stage.close();
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/lab/loan-view.fxml"));
@@ -141,7 +158,7 @@ public class FormController {
             LoanViewController controller = loader.getController();
             controller.initializeTable(payments, true);
 
-            scene = new Scene(borderPane);
+            Scene scene = new Scene(borderPane);
             stage.setScene(scene);
             stage.show();
         }
