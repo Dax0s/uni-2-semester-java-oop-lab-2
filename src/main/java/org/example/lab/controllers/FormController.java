@@ -132,14 +132,15 @@ public class FormController {
 
             List<LoanPayment> payments = loan.GetMonthlyPayments();
 
+            stage = (Stage) (((Node) event.getSource()).getScene().getWindow());
+            stage.close();
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/lab/loan-view.fxml"));
             BorderPane borderPane = loader.load();
-
 
             LoanViewController controller = loader.getController();
             controller.initializeTable(payments, true);
 
-            stage = (Stage) (((Node) event.getSource()).getScene().getWindow());
             scene = new Scene(borderPane);
             stage.setScene(scene);
             stage.show();
