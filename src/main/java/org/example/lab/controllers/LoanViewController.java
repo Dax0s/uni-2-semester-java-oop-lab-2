@@ -16,6 +16,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.example.lab.loans.Loan;
 import org.example.lab.loans.LoanPayment;
 
 import java.io.BufferedWriter;
@@ -24,6 +25,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class LoanViewController {
     @FXML
@@ -48,6 +50,17 @@ public class LoanViewController {
     private TextField toMonth;
 
     @FXML
+    private TextField deferFromYear;
+    @FXML
+    private TextField deferFromMonth;
+    @FXML
+    private TextField deferLengthYear;
+    @FXML
+    private TextField deferLengthMonth;
+    @FXML
+    private TextField percentage;
+
+    @FXML
     private Label filteringErrorLabel;
     PauseTransition filteringErrorLabelPauseTransition = new PauseTransition(Duration.seconds(2));
 
@@ -60,7 +73,7 @@ public class LoanViewController {
         series.setName("Loan payments");
 
         for (LoanPayment payment : payments) {
-            series.getData().add(new XYChart.Data<>(String.valueOf((payment.year() - 1) * 12 + payment.month()), payment.getMonthlyPayment()));
+            series.getData().add(new XYChart.Data<>(String.valueOf((payment.getYear() - 1) * 12 + payment.getMonth()), payment.getMonthlyPayment()));
         }
 
         lineChart.getData().clear();
@@ -118,7 +131,7 @@ public class LoanViewController {
         writer.write("Metai,Mėnesis,Paskolos likutis,Mėnesinė įmoka,Palūkanos,Kreditas\n");
 
         for (LoanPayment payment : payments.get()) {
-            writer.write(payment.year() + "," + payment.month() + "," + payment.getLoanBalance() + "," + payment.getMonthlyPayment() + "," + payment.getInterest() + "," + payment.getCredit() + "\n");
+            writer.write(payment.getYear() + "," + payment.getMonth() + "," + payment.getLoanBalance() + "," + payment.getMonthlyPayment() + "," + payment.getInterest() + "," + payment.getCredit() + "\n");
         }
 
         writer.close();
@@ -226,6 +239,108 @@ public class LoanViewController {
             }
             initializeTable(filteredPayments.get(), false);
         }
+    }
+
+    private Optional<Integer> getValueFromField(TextField value) {
+        filteringErrorLabelPauseTransition.setOnFinished(actionEvent -> filteringErrorLabel.setText(""));
+        filteringErrorLabelPauseTransition.playFromStart();
+
+        try {
+            if (value.getText().isBlank())
+                throw new NullPointerException();
+
+            return Optional.of(Integer.parseInt(value.getText()));
+        } catch (NullPointerException e) {
+            filteringErrorLabel.setText("Turi būti pasirinktas pabaigos mėnesis");
+            return Optional.empty();
+        } catch (NumberFormatException e) {
+            filteringErrorLabel.setText("Pabaigos mėnesio lauke galimi tik skaičiai");
+            return Optional.empty();
+        }
+    }
+
+    private Optional<Double> getValueFromFieldDouble(TextField value) {
+        filteringErrorLabelPauseTransition.setOnFinished(actionEvent -> filteringErrorLabel.setText(""));
+        filteringErrorLabelPauseTransition.playFromStart();
+
+        try {
+            if (value.getText().isBlank())
+                throw new NullPointerException();
+
+            return Optional.of(Double.parseDouble(value.getText()));
+        } catch (NullPointerException e) {
+            filteringErrorLabel.setText("Turi būti pasirinktas pabaigos mėnesis");
+            return Optional.empty();
+        } catch (NumberFormatException e) {
+            filteringErrorLabel.setText("Pabaigos mėnesio lauke galimi tik skaičiai");
+            return Optional.empty();
+        }
+    }
+
+    @FXML
+    protected void defer() {
+
+        Optional<Integer> fromYear = getValueFromField(deferFromYear);
+        if (fromYear.isEmpty()) return;
+        Optional<Integer> fromMonth = getValueFromField(deferFromMonth);
+        if (fromMonth.isEmpty()) return;
+        Optional<Integer> deferLengthYear = getValueFromField(this.deferLengthYear);
+        if (deferLengthYear.isEmpty()) return;
+        Optional<Integer> deferLengthMonth = getValueFromField(this.deferLengthMonth);
+        if (deferLengthMonth.isEmpty()) return;
+        Optional<Double> percentage = getValueFromFieldDouble(this.percentage);
+        if (percentage.isEmpty()) return;
+
+
+        if ((fromYear.get() + deferLengthYear.get() - 1) * 12 + fromMonth.get() + deferLengthMonth.get() > payments.get().size()) {
+            filteringErrorLabel.setText("Pabaigos data negali būti didesnė už paskolos laikotarpį");
+            return;
+        }
+
+        int startingIndex = (fromYear.get() - 1) * 12 + fromMonth.get() - 1;
+        double startingBalance = payments.get().get(startingIndex).getLoanBalance();
+        int monthsOfDeference = deferLengthYear.get() * 12 + deferLengthMonth.get();
+        List<LoanPayment> originalPayments = payments.get().stream().map(LoanPayment::new).toList();
+        for (int i = startingIndex; i < startingIndex + monthsOfDeference; i++) {
+            LoanPayment tmp = payments.get().get(i);
+            tmp.setLoanBalance(startingBalance);
+            tmp.setCredit(0);
+            tmp.setInterest(startingBalance * (percentage.get() / 100 / 12));
+            tmp.setMonthlyPayment(startingBalance * (percentage.get() / 100 / 12));
+        }
+
+        if (payments.get().size() > startingIndex + monthsOfDeference) {
+            payments.get().subList(startingIndex + monthsOfDeference, payments.get().size()).clear();
+        }
+
+        int year = payments.get().get(startingIndex + monthsOfDeference - 1).getYear();
+        int month = payments.get().get(startingIndex + monthsOfDeference - 1).getMonth();
+        if (month == 12) {
+            year++;
+            month = 1;
+        } else {
+            month++;
+        }
+
+        for (int i = startingIndex; i < originalPayments.size(); i++) {
+            LoanPayment payment = originalPayments.get(i);
+
+            payment.setMonth(month);
+            payment.setYear(year);
+
+            payments.get().add(payment);
+
+            if (month == 12) {
+                month = 1;
+                year++;
+            } else {
+                month++;
+            }
+
+        }
+
+        initializeTable(payments.get(), false);
+        tableView.refresh();
     }
 
     @FXML

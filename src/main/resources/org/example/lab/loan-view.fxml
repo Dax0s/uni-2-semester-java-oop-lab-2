@@ -40,6 +40,14 @@
             <Label layoutX="18.0" layoutY="357.0" text="Iki:" />
             <Label fx:id="filteringErrorLabel" layoutX="17.0" layoutY="452.0" textFill="RED" />
             <Button layoutX="131.0" layoutY="578.0" mnemonicParsing="false" onAction="#newLoan" text="Naujos paskolos skaičiavimas" />
+            <Label layoutX="259.0" layoutY="315.0" text="Atidėjimas:" />
+            <TextField fx:id="deferFromYear" layoutX="259.0" layoutY="335.0" prefHeight="26.0" prefWidth="61.0" promptText="Metai" />
+            <TextField fx:id="deferFromMonth" layoutX="345.0" layoutY="335.0" prefWidth="61.0" promptText="Mėnuo" />
+            <TextField fx:id="deferLengthYear" layoutX="261.0" layoutY="388.0" prefHeight="26.0" prefWidth="61.0" promptText="Metai" />
+            <TextField fx:id="deferLengthMonth" layoutX="347.0" layoutY="391.0" prefWidth="61.0" promptText="Mėnuo" />
+            <TextField fx:id="percentage" layoutX="261.0" layoutY="424.0" prefHeight="26.0" prefWidth="147.0" promptText="Atidėjimo procentas" />
+            <Button layoutX="262.0" layoutY="460.0" mnemonicParsing="false" onAction="#defer" text="Atidėti" />
+            <Label layoutX="258.0" layoutY="368.0" text="Trukmė:" />
          </children>
       </AnchorPane>
    </center>

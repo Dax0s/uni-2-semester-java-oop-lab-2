@@ -19,8 +19,8 @@
             <TextField fx:id="sum" layoutX="208.0" layoutY="36.0" promptText="Suma" />
             <TextField fx:id="years" layoutX="57.0" layoutY="115.0" prefHeight="26.0" prefWidth="69.0" promptText="Metai" />
             <TextField fx:id="months" layoutX="199.0" layoutY="115.0" prefHeight="26.0" prefWidth="76.0" promptText="Mėnesiai" />
-            <TextField fx:id="yearlyPercentage" layoutX="130.0" layoutY="225.0" promptText="Metinis procentas" />
             <ChoiceBox fx:id="choices" layoutX="14.0" layoutY="174.0" prefWidth="150.0" />
+            <TextField fx:id="yearlyPercentage" layoutX="130.0" layoutY="225.0" promptText="Metinis procentas" />
             <Button layoutX="14.0" layoutY="258.0" mnemonicParsing="false" onAction="#onCalculateButtonPress" text="Skaičiuoti" />
             <Label fx:id="sumError" layoutX="14.0" layoutY="14.0" textFill="RED" />
             <Label fx:id="yearError" layoutX="14.0" layoutY="97.0" textFill="RED" />
